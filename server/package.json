@@ -1,0 +1,21 @@
+{
+  "author": "Melih Elibol <elibol@gmail.com> (http://melihelibol.com/)",
+  "name": "melihelibol.com",
+  "description": "Melih's portfolio website.",
+  "version": "0.0.0",
+  "homepage": "http://melihelibol.com/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/melihelibol/site.git"
+  },
+  "main": "app.js",
+  "engines": {
+    "node": "~0.6.11"
+  },
+  "dependencies": {
+    "express": "~2.5.8",
+    "neo4j": "^1.0.0"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}

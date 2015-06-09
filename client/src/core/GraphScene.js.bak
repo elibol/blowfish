@@ -1,0 +1,113 @@
+var wanderuRouteJSON = [];
+
+function GraphScene(){
+    this.nodes = [];
+    this.edges = [];
+    this.scene = new THREE.Scene();
+}
+
+GraphScene.prototype.compute = function(){
+    for(var i=-1;++i<this.nodes.length;){
+	this.nodes[i].compute();
+    }
+}
+
+GraphScene.fromJSON = function(wanderuRouteJSON){
+    
+}
+
+GraphScene.prototype.addNode = function(v, color){
+    var node = new GSNode(v, color);
+    this.nodes.push(node);
+    this.scene.add(node.particle);
+    return node;
+}
+
+GraphScene.prototype.addEdge = function(nodeA, nodeB){
+    var edge = new GSEdge(nodeA, nodeB);
+    this.edges.push(edge);
+    this.scene.add(edge.line);
+    return edge;
+}
+
+function GSNode(v, color){
+    this.particle = null;
+    this.spherical = new Spherical(400, 0, 0);
+    this.init(v, color);
+}
+
+GSNode.prototype.compute = function(){
+    //console.log("posPrime", this.posPrime.length());
+    //console.log("position", this.particle.position.length());
+    this.velocity.x = this.velPrime.x;
+    this.velocity.y = this.velPrime.y;
+    this.velocity.z = this.velPrime.z;
+    //this.velocity.multiplyScalar(.9);
+    
+    var len = this.posPrime.length();
+    this.posPrime.add(this.velocity);
+    this.posPrime.normalize();
+    this.posPrime.multiplyScalar(len);
+    
+    this.particle.position.x = this.posPrime.x;
+    this.particle.position.y = this.posPrime.y;
+    this.particle.position.z = this.posPrime.z;
+    //this.spherical.toVector(this.particle.position);
+}
+
+GSNode.prototype.init = function(v, color){
+    
+    //var color = Math.random() * 0x808080 + 0x808080;
+    console.log(color);
+    if(color == null) color = 0xffffff;
+    var pMaterial = new THREE.ParticleCanvasMaterial({ color: color, program: this.programStroke });
+    
+    this.particle = new THREE.Particle(pMaterial);
+    
+    this.particle.scale.x = this.particle.scale.y = 10;
+    
+    if(!v){
+	this.spherical.theta = Math.random()*PI2;
+	this.spherical.phi = Math.random()*PI;
+	this.spherical.toVector(this.particle.position);
+    } else {
+	this.particle.position.add(v);
+    }
+    
+    this.velocity = new THREE.Vector3(0,0,0);
+    this.velPrime = new THREE.Vector3(0,0,0);
+    this.posPrime = this.particle.position.clone();
+    
+    this.compute();
+    
+    
+    
+    /*
+    var p = this.particle.position;
+    p.x = Math.random();
+    p.y = Math.random();
+    p.z = Math.random();
+    p.normalize();
+    p.multiplyScalar(400);
+    */
+}
+
+GSNode.prototype.programStroke = function(context) {
+    //context.lineWidth = 0.05;
+    context.beginPath();
+    context.arc( 0, 0, 1, 0, PI2, true );
+    context.closePath();
+    context.fill();
+    //context.stroke();
+}
+
+function GSEdge(nodeA, nodeB){
+    this.geometry = new THREE.Geometry();
+    this.a = nodeA.particle.position;
+    //this.a = new THREE.Vector3( nodeA.particle.position.x, nodeA.particle.position.y, nodeA.particle.position.z );
+    this.geometry.vertices.push(this.a);
+    this.b = nodeB.particle.position;
+    //this.b = new THREE.Vector3( nodeB.particle.position.x, nodeB.particle.position.y, nodeB.particle.position.z );
+    this.geometry.vertices.push(this.b);
+    this.line = new THREE.Line(this.geometry, new THREE.LineBasicMaterial({ color: 0xffffff, opacity: .5 }));
+}
