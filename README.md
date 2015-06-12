@@ -1,6 +1,6 @@
 # Blowfish #
 
-Although this repository contains executable code, it is primarily intent for educational purposes.
+Although this repository contains executable code, it is primarily intended for educational purposes.
 
 ### TODO ### 
 * Remove database dependency.
