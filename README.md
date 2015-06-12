@@ -1,8 +1,8 @@
 # Blowfish #
 
-Although this repository contains executable code, it is primarily intended for educational purposes.
+*The contents of this repository are provided for educational purposes.*
 
-### TODO ### 
+## TODO ##
 * Remove database dependency.
 * Restructure as grunt project.
 * Cleanup code.
